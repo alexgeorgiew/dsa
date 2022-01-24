@@ -1,0 +1,69 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+#include <bits/stdc++.h>
+using namespace std;
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
+    unordered_map<long int,long int> mamap; 
+    
+   
+    int result=0;
+    long int n,curkey,curdoor;
+    cin>>n;
+    for(int i=0;i<n;i++)
+    {
+        cin>>curkey;
+        mamap.insert(pair<long int,long int>(i,curkey));  
+    }
+ 
+     unordered_map<long int,long int> mamap2; 
+    for(int i=0;i<n;i++)
+    {
+          unordered_map<long int,long int>::const_iterator got = mamap.find (i);
+          pair<unordered_map<long int,long int>::const_iterator,bool> f = mamap2.insert(pair<long int,long int>(got->second,0));
+        
+         if(f.second==false)
+            {
+              mamap2[got->second]++;
+            } 
+        cin>>curdoor;
+       
+       
+        
+         unordered_map<long int,long int>::const_iterator got2 = mamap2.find(curdoor);
+       
+         
+     
+        if(got2==mamap2.end())
+        {
+            result++;
+        }
+        else
+        {   
+            if(got2->second==0)
+            {
+              mamap2.erase(got2);
+            }
+            else
+            {
+               mamap2[got2->first]--;
+            }
+        }
+  
+     
+    }
+  
+        
+        
+     
+    cout<<result;
+    return 0;
+}
