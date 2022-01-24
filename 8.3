@@ -1,0 +1,125 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+      auto comparator = [](const pair<long long int,long long  int>& a, const pair<long long int,long long  int>& b) {
+           if(a.first==b.first)return a.second>b.second;
+        return a.first > b.first;
+    };
+    
+     auto comparator2 = [](const pair<long long int,long long  int>& a, const pair<long long int,long long  int>& b) {
+           if(a.second==b.second)return a.first<b.second;
+        return a.second > b.second;
+    };
+    
+  
+    
+ 
+   priority_queue< pair<long long int,long long  int>, vector<pair<long long   int,long long  int>>, decltype(comparator)>  pq(comparator);
+    
+    
+    
+ priority_queue< pair<long long int,long long  int>, vector<pair<long long   int,long long  int>>, decltype(comparator2)>  store(comparator2);
+  
+     long long int n;
+     long long int when,howlong;
+     cin>>n;
+    
+  
+   long  long int waiting=-1;
+    long long int curtime=-1;   
+     pair<long long  int,long long  int>in;
+    for(int i=0;i<n;i++)
+    {
+        cin>>when;
+        cin>>howlong;
+        in.first=when;
+        in.second=howlong;
+            pq.push(in);  
+    }    
+      
+   
+    
+     waiting=pq.top().second;
+    curtime=pq.top().first+pq.top().second;
+    pq.pop();
+    
+    //cout<<curtime<<" "<<waiting<<'\n';
+  
+   
+    while(pq.size()>0 || store.size()>0)
+   {
+     while(pq.size()>0 && pq.top().first<=curtime)
+     {
+         store.push(pq.top());
+         pq.pop();
+     }
+            if(store.size()>0)
+            {
+                pair<long long int,long long int> it=store.top();
+                store.pop();
+                if(curtime<it.first)
+                {
+                    curtime=it.first+it.second;
+                    waiting+=it.second;
+                }
+                else if(curtime>it.first)
+                {
+                    waiting+=curtime-it.first +it.second;
+                    curtime+=it.second;
+                }
+                else // it is supposed to not go there
+                {
+                    //while(true){};
+                    curtime+=it.second;
+                    waiting+=it.second;
+                }
+                
+               //  cout<<curtime<<" "<<waiting<<'\n';
+  
+            }
+            else //store.size()==0
+            {
+                if(pq.size()>0)
+                {
+                      pair<long long int,long long int> it=pq.top();
+                     pq.pop();
+                   if(curtime<it.first)
+                   {
+                    curtime=it.first+it.second;
+                    waiting+=it.second;
+                   }
+                   else if(curtime>it.first)
+                   {
+                    waiting+=curtime-it.first +it.second;
+                    curtime+=it.second;
+                   }
+                   else // it is supposed to not go there
+                   {
+                       while(true){};
+                   }
+                    
+                }
+                else
+                {
+                    while(true){};
+                      cout<<waiting/n;
+                    return 0;
+                }
+              //  cout<<curtime<<" "<<waiting<<'\n';   
+            }
+          
+   }
+    long long int  result=waiting/n;
+   cout<<result;
+    return 0;
+}
