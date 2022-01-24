@@ -1,0 +1,100 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+#include <set>
+#include <bits/stdc++.h>
+using namespace std;
+
+
+long long int binomcoef(long long int n)
+{
+    if(n<3) return 0;
+    else
+    {
+        return  (n*(n-1)*(n-2))/6;
+    }
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */ 
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    long long int n;
+    cin>>n;
+    long long int k;
+    cin>>k;
+    set<long long int> kilograms;
+    unordered_map<long long int,vector <int>> kiloandindex;
+    for(int i=0;i<n;i++)
+    {
+        long long int cur;
+        cin>>cur;
+        kilograms.insert(cur);
+        
+        vector<int> emp;
+       kiloandindex.insert(pair<long long int,vector<int>>(cur,emp));
+        kiloandindex[cur].push_back(i);
+        
+    }
+    set<long long int>::iterator it=kilograms.begin();
+    while(it!=kilograms.end())
+    {
+       sort(kiloandindex[*it].begin(),kiloandindex[*it].end());
+        it++;
+    }
+    
+    long long int result=0;
+    if(k==1)
+    {
+        it=kilograms.begin();
+        while(it!=kilograms.end())
+       {
+         result+=binomcoef(kiloandindex[*it].size());
+          it++;
+       } 
+    }
+    else
+    {
+        it=kilograms.begin();
+         set<long long int>::iterator it2=kilograms.begin();
+         set<long long int>::iterator it3=kilograms.begin();
+        
+        while(it!=kilograms.end())
+        {
+            it2=kilograms.find((*it)*k);
+            it3=kilograms.find((*it2)*k);
+            
+            if(it2!=kilograms.end() && it3!=kilograms.end())  // we found kilograms that satisfy condition
+            {
+                for(unsigned int x=0;x<kiloandindex[*it].size();x++)
+                {
+                    vector<int>::iterator up=std::upper_bound (kiloandindex[*it2].begin(),kiloandindex[*it2].end(),kiloandindex[*it][x]);
+                    for(unsigned int y=up-kiloandindex[*it2].begin();y<kiloandindex[*it2].size();y++)
+                    {
+                        vector<int>::iterator up2=std::upper_bound (kiloandindex[*it3].begin(),kiloandindex[*it3].end(),kiloandindex[*it2][y]);
+                        for(unsigned int z=up2-kiloandindex[*it3].begin();z<kiloandindex[*it3].size();z++)
+                        {
+                            result+=kiloandindex[*it3].size()-z;
+                            z=kiloandindex[*it3].size();
+                            /*if(kiloandindex[*it][x]<kiloandindex[*it2][y] && kiloandindex[*it2][y]<kiloandindex[*it3][z])
+                            {
+                                result++;
+                            }*/
+                        }
+                    }
+                }
+            }
+            it++;
+            
+        }
+        
+        
+    }
+  
+    cout<<result;
+    
+    return 0;
+}
