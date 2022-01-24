@@ -1,0 +1,90 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <list>
+#include <unordered_map>
+#include <string>
+using namespace std;
+
+ unordered_map<char,bool> ch;
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
+    int n;
+    cin>>n;
+    string first,cur;
+    cin>>first;
+    unordered_map<char,vector<char>> info;
+    unordered_map<char,int> smal;
+     unordered_map<char,int> big;
+   
+    for(int i=0;i<n-1;i++)
+    {
+        cin>>cur;
+        int len=min(first.length(),cur.length());
+        for(int j=0;j<len;j++)
+        {
+            if(first.at(j)!=cur.at(j))
+            {
+              info[first.at(j)].push_back(cur.at(j));
+                if(smal.find(first.at(j))==smal.end())
+                {
+                    smal[first.at(j)]=1;
+                }
+                else smal[first.at(j)]++;
+                if(big.find(cur.at(j))==big.end())
+                {
+                    big[cur.at(j)]=1;
+                }
+                else big[cur.at(j)]++;
+                //cout<<first.at(j)<<" "<<cur.at(j)<<'\n';
+                j=len;
+                
+            }
+        }
+        first=cur;
+    }
+   
+    int counter=0;
+    while(smal.size()>counter)
+    {
+         unordered_map<char,vector<char>> ::iterator it=info.begin();
+        while(it!=info.end())
+        {
+            if(big.find(it->first)==big.end() && ch.find(it->first)==ch.end())
+            {
+                ch[it->first]=true;
+                cout<<it->first<<" ";
+                counter++;
+                for(int i=0;i<info[it->first].size();i++)
+                {
+                    if(big[info[it->first][i]]==1)
+                    {
+                        if(info.size()==1)
+                        {
+                            cout<<info[it->first][i];
+                        }
+                        big.erase(info[it->first][i]);
+                    }
+                    else
+                    {
+                        big[info[it->first][i]]--;
+                    }
+                }
+                info.erase(it->first);
+                it=info.begin();
+            }
+            else
+            {
+               it++;
+            }
+            
+        }
+        //if(counter==3)return 0;
+    }
+     
+     
+        
+    return 0;
+}
