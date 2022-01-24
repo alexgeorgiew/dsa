@@ -1,0 +1,109 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <unordered_map>
+#include <map>
+using namespace std;
+unordered_map<long int,bool>checked;
+unordered_map<long int,bool>curchek;
+ map<long int,vector<long int>> info;
+bool cycle=false;
+int counter=0;
+
+void DFS(long int curr)
+{
+    
+     checked[curr] = true;
+      curchek[curr]=true;
+  // cout << curr << endl;
+  for (long  int x : info[curr])
+  {
+    if (!checked[x])
+    {
+      DFS(x);
+    }
+      else if(curchek[x]==true)
+      {     
+         cycle=true;
+      }
+  }
+    curchek[curr]=false;
+    
+}
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int q;
+    cin>>q;
+    long int a,b;
+   
+    for(int i=0;i<q;i++)
+    {
+        long int e;
+        cin>>e;
+        long int start;
+        for(int j=0;j<e;j++)
+        {
+            cin>>a>>b;
+            info[a].push_back(b);
+            if(j==0)start=a;
+            checked[a]=false;
+            checked[b]=false;
+            curchek[a]=false;
+            curchek[b]=false;
+        }
+        bool flag=false;
+        DFS(start);
+         if(cycle)
+        {
+             counter++;
+            cout<<1<<" ";
+            cycle=false;
+             flag=true;
+        }
+       else
+       {
+        unordered_map<long int,bool> ::iterator it=checked.begin();
+        while(it!=checked.end())
+        {
+            if(it->second==false)
+            {
+                DFS(it->first);
+                 if(cycle)
+                 {
+                      counter++;
+                    cout<<1<<" ";
+                    cycle=false;
+                     flag=true;
+                     it=checked.end(); 
+                   }
+                else
+                {
+                    it++;
+                }
+            }
+            else
+            {
+            it++;
+            }
+        }
+       }
+       
+       if(flag==false)
+       {
+           cout<<0<<" ";
+            counter++;
+       }
+        
+     
+        checked.clear();
+        info.clear();
+        curchek.clear();
+    }
+   if(counter>q)
+   {
+       while(true){};
+   }
+    return 0;
+}
