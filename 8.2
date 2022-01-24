@@ -1,0 +1,161 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+      auto comparator = [](const pair<pair<long long int,long long int>,long long int>& a, const pair<pair<long long int,long long int>,long long int>& b) {
+           if(a.first.first==b.first.first && a.first.second==b.first.second)return a.second>b.second;
+          if(a.first.first==b.first.first)return a.first.second>b.first.second;
+          if(a.first.second==b.first.second)return a.first.first>b.first.first;
+        return a.first.first > b.first.first;
+    };
+    
+    auto comparator2 = [](const pair<pair<long  int,long  int>,int>& a, const pair<pair<long  int,long  int>, int>& b) {
+          if(a.first.second==b.first.second)return a.second>b.second;
+        return a.first.second > b.first.second;
+    };
+
+   priority_queue< pair<pair<long  int, long int>,  int>, vector<pair<pair<long  int,long  int>,  int>>, decltype(comparator)>  pq(comparator);
+    
+    
+    
+    priority_queue< pair<pair< long int,long  int>, long int>, vector<pair<pair< long int,long  int>,  int>>,                decltype(comparator2)>  pqq(comparator2);
+  
+    
+  
+     int n;
+     long int when,howlong;
+    cin>>n;
+    set<long int>maset;
+  
+    
+     pair<long  int,long  int>in;
+     pair<pair<long int,long  int>, int> inin;
+   
+    
+    for(int i=0;i<n;i++)
+    {
+        cin>>when;
+        cin>>howlong;
+        in.first=when;
+        in.second=howlong;
+        inin.first=in;
+        inin.second=i;
+        pq.push(inin);
+        maset.insert(when);
+    }
+    
+    long long int curtime=-1;   
+    curtime=pq.top().first.first+pq.top().first.second;
+    cout<<pq.top().second<<" ";
+   
+    
+     
+           maset.erase(pq.top().first.first);
+      pq.pop();
+    
+   
+    while(pq.size()>0)
+    {
+        pqq.push(pq.top());
+        pq.pop();
+    }
+   
+   
+   while(pqq.size()>0)
+   {
+       //cout<<'\n';
+      //cout<<"curtime"<<curtime<<'\n';
+       if(curtime<pqq.top().first.first)
+       {
+        priority_queue< pair<pair<long int,long  int>, int>, vector<pair<pair<long int,long int>,int>>,decltype(comparator2)>  store(comparator2);
+           
+        
+           bool flag=false;
+           while(pqq.size()>0 && flag==false)
+           { 
+               if(pqq.top().first.first<=curtime && flag==false)
+               {
+                  
+                   flag=true;
+                   cout<<pqq.top().second<<" ";
+                   
+                   
+           maset.erase(pqq.top().first.first);
+                   
+                   curtime+=pqq.top().first.second;
+                   pqq.pop();   
+               }
+               else
+               {
+                  store.push(pqq.top());
+                  pqq.pop(); 
+               }
+           }
+           
+           if(flag)
+           {
+               while(store.size()>0)
+               {
+                   
+                   pqq.push(store.top());
+                   store.pop();
+               }
+           }
+           else
+           {
+                while(store.size()>0)
+               {
+                    if(store.top().first.first==*maset.begin() && flag==false)
+                    {
+                         maset.erase(store.top().first.first);
+                        flag=true;
+                        curtime=store.top().first.first+store.top().first.second;
+                        cout<<store.top().second<<" ";
+                        store.pop();
+                    }
+                    else
+                    {
+                   pqq.push(store.top());
+                   store.pop();
+                    }
+               }
+               
+              // curtime=pqq.top().first.first+pqq.top().first.second;
+               //cout<<pqq.top().second<<" ";
+               
+              //vector<long int>::iterator position =find(timesofstart.begin(), timesofstart.end(), pqq.top().first.first);
+          // timesofstart.erase(position);
+               
+              // pqq.pop();
+           }
+           
+       }
+       else
+       {
+           //cout<<'\n';
+          // cout<<pqq.top().first.first<<" "<<pqq.top().first.second<<"ddd"<<'\n';
+           curtime+=pqq.top().first.second;
+           cout<<pqq.top().second<<" ";
+           
+           maset.erase(pqq.top().first.first);
+        
+           pqq.pop();
+       }     
+   }
+   
+    
+    return 0;
+}
