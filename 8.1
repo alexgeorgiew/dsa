@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+#include <set>
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+  	cout << fixed << setprecision(1);
+    set<pair<long int,long int>> s;
+    long int n;
+    cin>>n;
+    long int cur;
+    cin>>cur;
+    cout<<cur*1.0<<'\n';
+    s.insert(pair<long int,long int>(cur,0));
+    
+    std::set<pair<long int,long int>>::iterator it=s.begin();
+    double last=cur*1.0;
+    for(long int i=1;i<n;i++)
+    {
+        
+        cin>>cur;
+        s.insert(pair<long int,long int>(cur,i));
+        if(s.size()%2==1)
+        {
+           
+            if( cur == it->first)
+            {
+                 last=it->first*1.0;
+                cout<<last<<'\n';
+                ++it;
+            }
+            else if(cur<it->first)
+            {
+              
+              last=it->first*1.0;
+              cout<<last<<'\n';
+            }
+            else
+            {  
+                ++it;
+                last=it->first*1.0;
+                cout<<last<<'\n';
+            }
+        }
+        else
+        {
+            if(cur<it->first)
+            {
+              last=( ( it->first + (--it)->first )/2.0);
+                cout<<last<<'\n';    
+           
+            }
+            else if(cur==it->first)
+            {
+                 last=( ( it->first + (++it)->first )/2.0);
+                cout<<last<<'\n';
+               --it;
+            }
+            else
+            {
+                 last=( ( it->first + (++it)->first )/2.0);
+                cout<<last<<'\n';
+               --it;
+            }
+        }
+    }
+   
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    return 0;
+}
